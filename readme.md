@@ -48,3 +48,28 @@ Then store your Database credentials in your .env file.
 * **Presentation & Demo** -- **10 points** -- Engaging, clear explanation, and live demo
 
 **If code doesn't run/compile you can get no more than a 60. But please write comments and a README to explain what you were trying to do.**
+
+
+# Routes: *=admin only
+POST /users  
+GET /users  
+DELETE /users  *
+
+POST /courses  
+GET /courses  
+
+GET /courses/:id  
+PUT /courses/:id  *
+DELETE /courses/:id  *
+
+POST /courses/:id/comments  
+GET /courses/:id/comments  
+PUT /courses/:id/comments  
+DELETE /courses/:id/comments  
+
+POST /courses/:id/likes  
+GET /courses/:id/likes  
+DELETE /courses/:id/likes  *
+
+POST /courses/:id/ratings
+GET /courses/:id/ratings
