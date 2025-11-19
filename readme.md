@@ -50,7 +50,7 @@ Then store your Database credentials in your .env file.
 **If code doesn't run/compile you can get no more than a 60. But please write comments and a README to explain what you were trying to do.**
 
 
-# Routes: *=admin only
+## Routes: *=admin only
 POST /users  
 GET /users  
 DELETE /users  *
@@ -68,8 +68,13 @@ PUT /courses/:id/comments
 DELETE /courses/:id/comments  
 
 POST /courses/:id/likes  
+PUT /courses/:id/likes  
+> thought is to check for existance of course in database, if not present, use post to create new entry to track likes. If present, use put to alter entry for corresponding course's likes
 GET /courses/:id/likes  
 DELETE /courses/:id/likes  *
 
 POST /courses/:id/ratings
+PUT /courses/:id/ratings
+> Same thought for ratings as likes
 GET /courses/:id/ratings
+> We can show what percentage of users rated each course at each star amount, and then calculate average rating

@@ -1,6 +1,7 @@
 import express from 'express'
 import cors from 'cors'
 import 'dotenv/config'
+import courseRoutes  from './routes/courses.js'
 
 
 import { query } from './db/postgres.js';
@@ -16,13 +17,15 @@ app.use(cors())
 
 // base route
 app.get('/', (req, res) => {
-    res.send("Welcome to the Job Application Tracker API!!!")
+    res.send("Welcome to the Course Rating API!!!")
 })
 
 
 app.get('/up', (req, res) => {
   res.json({status: 'up'})
 })
+
+courseRoutes(app)
 
 
 app.listen(app.get('port'), () => {
