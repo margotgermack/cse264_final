@@ -74,7 +74,7 @@ const courseRoutes = (app) => {
             const result = await query(qs, [course_id]);
 
             if (result.rowCount === 0) {
-                return res.status(404).json({ error: `Course ID ${course_id} not found` });
+                return res.status(404).json({ error: `Course ID ${course_id} not found` })
             }
 
             res.json({
@@ -83,8 +83,48 @@ const courseRoutes = (app) => {
             });
 
         } catch (err) {
+            console.error(err)
+            res.status(500).json({ error: err.message })
+        }
+    });
+
+
+    // PUT /courses/course_id
+    app.put('/courses/:course_id', async (req, res) => {
+        try {
+            const { course_id } = req.params;
+            const { code, name, description } = req.body;
+
+            if (!code || !name || !description) {
+                return res.status(400).json({
+                    error: "code, name, and description are required."
+                })
+            }
+
+            const qs = `
+                UPDATE courses
+                SET code = $2,
+                name = $3,
+                description = $4
+                WHERE id = $1
+                RETURNING *;
+            `;
+
+            const params = [course_id, code, name, description]
+            const result = await query(qs, params)
+
+            if (result.rowCount === 0) {
+                return res.status(404).json({ error: `Course ID ${course_id} not found` })
+            }
+
+            res.json({
+                message: "Course updated successfully.",
+                updated: result.rows[0]
+            });
+
+        } catch (err) {
             console.error(err);
-            res.status(500).json({ error: err.message });
+            res.status(500).json({ error: err.message })
         }
     });
 
