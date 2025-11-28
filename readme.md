@@ -64,8 +64,8 @@ DELETE /courses/:id  *
 
 POST /courses/:id/comments  
 GET /courses/:id/comments  
-PUT /courses/:id/comments  
-DELETE /courses/:id/comments  
+PUT /courses/:id/comments/:comment_id  
+DELETE /courses/:id/comments/:comment_id  
 
 POST /courses/:id/likes  
 PUT /courses/:id/likes  

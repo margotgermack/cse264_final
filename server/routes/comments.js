@@ -21,7 +21,7 @@ const commentRoutes = (app) => {
             const { course_id } = req.params
             const { created_by, body } = req.body;
 
-            if (!created_by || !body || !course_id) {
+            if (!created_by || !body) {
                 return res.status(400).json({ 
                     error: "created_by, course_id, and body are required." 
                 });
@@ -43,7 +43,74 @@ const commentRoutes = (app) => {
             console.error(err)
             res.status(500).json({error: err.message})
         }
-    })
+    });
+
+    // PUT /courses/:course_id/comments/:comment_id
+    app.put('/courses/:course_id/comments/:comment_id', async (req, res) => {
+        try {
+            const { course_id, comment_id } = req.params
+            const { created_by, body } = req.body
+
+            if (!created_by || !body) {
+                return res.status(400).json({
+                    error: "created_by and body are required."
+                })
+            }
+
+            const qs = `
+                UPDATE comments
+                SET created_by = $1,
+                    body = $2
+                WHERE id = $3 AND course_id = $4
+                RETURNING *;
+            `;
+
+            const params = [created_by, body, comment_id, course_id]
+            const result = await query(qs, params)
+
+            if (result.rowCount === 0) {
+                return res.status(404).json({ error: "Comment not found." })
+            }
+
+            res.json({
+                message: "comment updated successfully.",
+                comment: result.rows[0]
+            })
+
+        } catch (err) {
+            console.error(err)
+            res.status(500).json({ error: err.message })
+        }
+    });
+
+    // DELETE /courses/:course_id/comments/:comment_id
+    app.delete('/courses/:course_id/comments/:comment_id', async (req, res) => {
+        try {
+            const { course_id, comment_id } = req.params
+
+            const qs = `
+                DELETE FROM comments
+                WHERE id = $1 AND course_id = $2
+                RETURNING *;
+            `;
+
+            const params = [comment_id, course_id]
+            const result = await query(qs, params)
+
+            if (result.rowCount === 0) {
+                return res.status(404).json({ error: "Comment not found." })
+            }
+
+            res.json({
+                message: "comment deleted successfully.",
+                comment: result.rows[0]
+            })
+
+        } catch (err) {
+            console.error(err)
+            res.status(500).json({ error: err.message })
+        }
+    });
 
 /*
     // GET /comments/comment_id
