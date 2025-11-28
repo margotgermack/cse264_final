@@ -65,6 +65,31 @@ const courseRoutes = (app) => {
     });
 
 
+    // DELETE /courses/course_id
+    app.delete('/courses/:course_id', async (req, res) => {
+        try {
+            const { course_id } = req.params;
+
+            const qs = `DELETE FROM courses WHERE id = $1 RETURNING *`;
+            const result = await query(qs, [course_id]);
+
+            if (result.rowCount === 0) {
+                return res.status(404).json({ error: `Course ID ${course_id} not found` });
+            }
+
+            res.json({
+                message: "Course deleted successfully.",
+                deleted: result.rows[0]
+            });
+
+        } catch (err) {
+            console.error(err);
+            res.status(500).json({ error: err.message });
+        }
+    });
+
+
+
 }
 
 export default courseRoutes
