@@ -2,6 +2,7 @@ import express from 'express'
 import cors from 'cors'
 import 'dotenv/config'
 import courseRoutes  from './routes/courses.js'
+import commentRoutes from './routes/comments.js'
 
 
 import { query } from './db/postgres.js';
@@ -26,6 +27,7 @@ app.get('/up', (req, res) => {
 })
 
 courseRoutes(app)
+commentRoutes(app)
 
 
 app.listen(app.get('port'), () => {
