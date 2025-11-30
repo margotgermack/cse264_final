@@ -3,6 +3,7 @@ import cors from 'cors'
 import 'dotenv/config'
 import courseRoutes  from './routes/courses.js'
 import commentRoutes from './routes/comments.js'
+import userRoutes from './routes/users.js'
 
 
 import { query } from './db/postgres.js';
@@ -26,6 +27,7 @@ app.get('/up', (req, res) => {
   res.json({status: 'up'})
 })
 
+userRoutes(app)
 courseRoutes(app)
 commentRoutes(app)
 

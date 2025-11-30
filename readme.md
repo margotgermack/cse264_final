@@ -57,7 +57,6 @@ DELETE /users  *
 
 POST /courses  
 GET /courses  
-
 GET /courses/:id  
 PUT /courses/:id  *
 DELETE /courses/:id  *
