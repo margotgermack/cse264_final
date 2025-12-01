@@ -52,7 +52,7 @@ const userRoutes = (app) => {
     })
 
     // DELETE /users
-    app.delete('/users', async(req, res) => {
+    app.delete('/users/:user_id', async(req, res) => {
         try {
             const { user_id } = req.body
 
