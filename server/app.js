@@ -4,6 +4,8 @@ import 'dotenv/config'
 import courseRoutes  from './routes/courses.js'
 import commentRoutes from './routes/comments.js'
 import userRoutes from './routes/users.js'
+import likeRoutes from './routes/likes.js'
+import ratingRoutes from './routes/ratings.js'
 
 
 import { query } from './db/postgres.js';
@@ -30,6 +32,8 @@ app.get('/up', (req, res) => {
 userRoutes(app)
 courseRoutes(app)
 commentRoutes(app)
+likeRoutes(app)
+ratingRoutes(app)
 
 
 app.listen(app.get('port'), () => {
