@@ -53,7 +53,7 @@ const courseRoutes = (app) => {
             const courseData = await query(courseQs)
 
             if (courseData.rowCount === 0) { //validation for resource not found
-            return res.status(404).json({ error: `Course ID ${course_id} not found` })
+                return res.status(404).json({ error: `Course ID ${course_id} not found` })
             }
 
             const course = courseData.rows[0]

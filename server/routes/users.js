@@ -51,10 +51,38 @@ const userRoutes = (app) => {
         }
     })
 
+
+    app.get('/users/:user_id', async(req, res) => {
+        try {
+            const { user_id } = req.params
+
+            if (!user_id) {
+                return res.status(400).json({ 
+                    error: "user_id is required." 
+                })
+            }
+            
+            const qs = `SELECT * FROM users WHERE id = $1;`
+            const userData = await query(qs, [user_id])
+
+            if (userData.rowCount === 0) { //validation for resource not found
+                return res.status(404).json({ error: `User ID ${user_id} not found` })
+            }
+
+            const user = userData.rows[0]
+            res.json(user)
+
+        } catch (err) {
+            console.error(err)
+            res.status(500).json({ error: err.message })
+        }
+    })
+
+
     // DELETE /users
     app.delete('/users/:user_id', async(req, res) => {
         try {
-            const { user_id } = req.body
+            const { user_id } = req.params
 
             if (!user_id) {
                 return res.status(400).json({ error: "user_id is required." })
