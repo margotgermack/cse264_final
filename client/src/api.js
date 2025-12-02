@@ -18,13 +18,13 @@ export async function getCourse(id) {
   return handleResponse(res);
 }
 
-export async function getCourseReviews(id) {
-  const res = await fetch(`${API_BASE_URL}/courses/${id}/reviews`);
+export async function getCourseRating(id) {
+  const res = await fetch(`${API_BASE_URL}/courses/${id}/ratings`);
   return handleResponse(res);
 }
 
-export async function createCourseReview(id, data) {
-  const res = await fetch(`${API_BASE_URL}/courses/${id}/reviews`, {
+export async function createCourseRating(id, data) {
+  const res = await fetch(`${API_BASE_URL}/courses/${id}/ratings`, {
     method: "POST",
     headers: { "Content-Type": "application/json" },
     body: JSON.stringify(data),
@@ -49,5 +49,14 @@ export async function loginUser(data) {
     body: JSON.stringify(data),
   });
   return handleResponse(res);
+}
+
+export async function updateRating(course_id, rating_id, data) {
+  const res = await fetch(`${API_BASE_URL}/courses/${course_id}/ratings/${rating_id}`, {
+    method: "PUT",
+    headers: { "Content-Type": "application/json"},
+    body: JSON.stringify(data)
+  });
+  return handleResponse(res)
 }
 

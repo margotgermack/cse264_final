@@ -2,9 +2,10 @@ import { useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
 import {
   getCourse,
-  getCourseReviews,
-  createCourseReview,
+  createCourseRating,
+  getCourseRating,
 } from "../api.js";
+
 
 import { useAuth } from "../AuthContext.jsx";
 
@@ -16,12 +17,16 @@ import Button from "@mui/material/Button";
 import ReviewList from "../components/ReviewList.jsx";
 import ReviewForm from "../components/ReviewForm.jsx";
 
+
+
 function CourseDetailPage() {
   const { id } = useParams();
   const { user } = useAuth();
 
   const [course, setCourse] = useState(null);
   const [reviews, setReviews] = useState([]);
+  const [ratings, setRatings] = useState(null);
+  const [loadingRatings, setLoadingRatings] = useState(true);
   const [loadingCourse, setLoadingCourse] = useState(true);
   const [loadingReviews, setLoadingReviews] = useState(true);
   const [error, setError] = useState("");
@@ -44,29 +49,28 @@ function CourseDetailPage() {
     loadCourse();
   }, [id]);
 
-  // Load reviews
   useEffect(() => {
-    async function loadReviews() {
+    async function loadRatings() {
       try {
-        setLoadingReviews(true);
-        const data = await getCourseReviews(id);
-        setReviews(data);
+        setLoadingRatings(true);
+        const data = await getCourseRating(id);
+        setRatings(data[0]);
       } catch (err) {
         console.error(err);
       } finally {
-        setLoadingReviews(false);
+        setLoadingRatings(false);
       }
     }
-    loadReviews();
+    loadRatings();
   }, [id]);
 
-  async function handleAddReview(reviewData) {
+  async function handleAddRating() {
     try {
-      const created = await createCourseReview(id, reviewData);
-      setReviews((prev) => [created, ...prev]);
+      const updated = await getCourseRating(id);
+      setRatings(updated);
     } catch (err) {
       console.error(err);
-      alert("Failed to submit review. Try again.");
+      alert("Failed to submit rating.");
     }
   }
 
@@ -127,19 +131,24 @@ function CourseDetailPage() {
         Reviews
       </Typography>
 
-      {loadingReviews ? (
+      {loadingRatings ? (
         <CircularProgress />
       ) : (
-        <ReviewList reviews={reviews} />
+        <ReviewList ratings={ratings} />
       )}
 
       <Box sx={{ mt: 3 }}>
         {user ? (
           <>
-            <Typography variant="h6" gutterBottom>
-              Leave a Review
-            </Typography>
-            <ReviewForm onSubmit={handleAddReview} />
+            {loadingRatings ? (
+              <CircularProgress />
+                ) : (
+                  <ReviewForm
+                    courseId={id}
+                    ratingId={ratings?.id}    // now correct
+                    currentRatings={ratings}
+                  />
+                )}
           </>
         ) : (
           <Typography variant="body2" sx={{ opacity: 0.8 }}>
