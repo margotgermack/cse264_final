@@ -32,7 +32,7 @@ function ReviewList({ ratings }) {
           marginBottom: "0.75rem",
         }}
       >
-        <p><strong>Average Rating:</strong> {average} / 5 ⭐ ({totalVotes} votes)</p>
+        <p><strong>Average Difficulty:</strong> {average} / 5 ⭐ ({totalVotes} votes)</p>
 
       </div>
 

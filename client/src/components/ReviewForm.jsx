@@ -35,6 +35,8 @@ function ReviewForm({ courseId, ratingId, currentRatings, onSubmit }) {
 
     setBody(""); //reset
     setRating(5);
+
+    alert("Review Submitted!")
   }
 
   return (
@@ -49,7 +51,7 @@ function ReviewForm({ courseId, ratingId, currentRatings, onSubmit }) {
       <h3>Leave a Review</h3>
 
       <label>
-        Rating (1-5){" "}
+        Difficulty (1-5){" "}
         <input
           type="number"
           min="1"
@@ -61,7 +63,14 @@ function ReviewForm({ courseId, ratingId, currentRatings, onSubmit }) {
       </label>
 
       <br />
-
+        <label>
+          like/dislike
+          <input 
+          type="checkbox"
+          min="1"
+          max="2"
+          />
+        </label>
       <br />
 
       <label>
