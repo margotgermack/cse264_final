@@ -4,6 +4,7 @@ import {
   getCourse,
   createCourseRating,
   getCourseRating,
+  getCourseComments,
 } from "../api.js";
 
 
@@ -26,6 +27,7 @@ function CourseDetailPage() {
   const [course, setCourse] = useState(null);
   const [reviews, setReviews] = useState([]);
   const [ratings, setRatings] = useState(null);
+  const [comments, setComments] = useState([])
   const [loadingRatings, setLoadingRatings] = useState(true);
   const [loadingCourse, setLoadingCourse] = useState(true);
   const [loadingReviews, setLoadingReviews] = useState(true);
@@ -37,8 +39,16 @@ function CourseDetailPage() {
       try {
         setLoadingCourse(true);
         setError("");
-        const data = await getCourse(id);
-        setCourse(data);
+        const [courseData, ratingsData, commentsData] = await Promise.all([
+          getCourse(id),
+          getCourseRating(id),
+          getCourseComments(id),
+        ]);
+
+        setCourse(courseData);
+        setRatings(ratingsData[0]); 
+        setComments(commentsData);
+
       } catch (err) {
         console.error(err);
         setError("Failed to load course details.");
@@ -48,6 +58,7 @@ function CourseDetailPage() {
     }
     loadCourse();
   }, [id]);
+  
 
   useEffect(() => {
     async function loadRatings() {
@@ -63,6 +74,20 @@ function CourseDetailPage() {
     }
     loadRatings();
   }, [id]);
+
+  async function handleAddReview() {
+    try {
+      const [updatedRatings, updatedComments] = await Promise.all([
+        getCourseRating(id),
+        getCourseComments(id),
+      ]);
+      setRatings(updatedRatings[0]);
+      setComments(updatedComments);
+    } catch (err) {
+      console.error(err);
+      alert("Failed to refresh reviews.");
+    }
+  }
 
   async function handleAddRating() {
     try {
@@ -92,6 +117,7 @@ function CourseDetailPage() {
         width: "100%",
         maxWidth: 700,
         mx: "auto",
+        mt: '64px',
       }}
     >
       <Typography variant="h4" gutterBottom>
@@ -134,7 +160,7 @@ function CourseDetailPage() {
       {loadingRatings ? (
         <CircularProgress />
       ) : (
-        <ReviewList ratings={ratings} />
+        <ReviewList ratings={ratings} comments={comments}/>
       )}
 
       <Box sx={{ mt: 3 }}>
@@ -147,6 +173,8 @@ function CourseDetailPage() {
                     courseId={id}
                     ratingId={ratings?.id}    // now correct
                     currentRatings={ratings}
+                    currentUser={user.username}
+                    onSubmit={handleAddReview}
                   />
                 )}
           </>

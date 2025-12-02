@@ -52,11 +52,36 @@ export async function loginUser(data) {
 }
 
 export async function updateRating(course_id, rating_id, data) {
+  console.log(`Data being sent in updateRating: ${JSON.stringify(data)}`)
   const res = await fetch(`${API_BASE_URL}/courses/${course_id}/ratings/${rating_id}`, {
     method: "PUT",
     headers: { "Content-Type": "application/json"},
     body: JSON.stringify(data)
   });
   return handleResponse(res)
+}
+
+// export async function CreateCourseRatingComment(course_id, data){
+//   const res = await fetch(`${API_BASE_URL}/courses/${course_id}/comments`,{
+//     method: "POST",
+//     headers: { "Content-Type": "application/json"},
+//     body: JSON.stringify(data)
+//   });
+//   return handleResponse(res)
+// }
+
+export async function createComment(course_id, data) {
+  const res = await fetch(`${API_BASE_URL}/courses/${course_id}/comments`, {
+    method: "POST",
+    headers: { "Content-Type": "application/json"},
+    body: JSON.stringify(data)
+  });
+  return handleResponse(res);
+}
+
+// fetch comments for a course
+export async function getCourseComments(course_id) {
+  const res = await fetch(`${API_BASE_URL}/courses/${course_id}/comments`);
+  return handleResponse(res);
 }
 

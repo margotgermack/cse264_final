@@ -11,7 +11,7 @@ function Navbar() {
   const { user, logout } = useAuth();
 
   return (
-    <AppBar position="fixed" color="transparent" elevation={0}>
+    <AppBar position="sticky" color="black" elevation={0}>
 
 
       <Toolbar

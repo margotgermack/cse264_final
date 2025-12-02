@@ -45,13 +45,7 @@ function HomePage() {
   });
 
   return (
-    <Box
-      // sx={{display: 'flex',
-      // flexDirection: 'column',
-      // alignItems: 'center', // center children horizontally
-      // width: '100%',         // optional, fills Container
-      // gap: 2,}}            // spacing between children}}
-    >
+    <Box  sx={{ mt: '64px', px: 2 }}>
       <Typography variant="h4" component="h2" gutterBottom>
         Browse Courses
       </Typography>
@@ -78,7 +72,7 @@ function HomePage() {
       )}
 
       {!loading && !error && (
-        <Box sx={{ display: "flex", flexDirection: "column", gap: 2 }}>
+        <Box sx={{ display: "flex", flexDirection: "column", gap: 2 , marginBottom: "5rem"}}>
           {filteredCourses.map((course) => (
             <CourseCard key={course.id} course={course} />
           ))}
