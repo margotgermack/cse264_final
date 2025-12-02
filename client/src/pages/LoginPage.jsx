@@ -20,7 +20,8 @@ function LoginPage() {
       navigate("/");
     } catch (err) {
       console.error(err);
-      setError("Invalid email or password.");
+      setError(err.message || "Login failed");
+
     }
   }
 

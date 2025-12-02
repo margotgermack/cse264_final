@@ -11,7 +11,7 @@ import RegisterPage from "./pages/RegisterPage.jsx";
 // components
 import Navbar from "./components/Navbar.jsx";
 
-import Container from "@mui/material/Container";
+import Box from "@mui/material/Box";
 
 function App() {
   return (
@@ -19,13 +19,15 @@ function App() {
       <Navbar />
 
       {/* GLOBAL CENTERED WRAPPER FOR ALL PAGES */}
-      <Container
-        maxWidth="md"
+      <Box
         sx={{
-          mt: 6,
+          width: "100vw",           // full viewport width
           display: "flex",
-          flexDirection: "column",
-          alignItems: "center",
+          flexDirection: "column",  // stack content vertically
+          alignItems: "center",     // center horizontally
+          px: 2,
+          mt: 0,
+
         }}
       >
         <Routes>
@@ -34,7 +36,7 @@ function App() {
           <Route path="/login" element={<LoginPage />} />
           <Route path="/register" element={<RegisterPage />} />
         </Routes>
-      </Container>
+      </Box>
     </>
   );
 }

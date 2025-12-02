@@ -34,7 +34,7 @@ export async function createCourseReview(id, data) {
 
 // authentication functions
 export async function registerUser(data) {
-  const res = await fetch("http://localhost:3000/auth/register", {
+  const res = await fetch(`${API_BASE_URL}/users`, {
     method: "POST",
     headers: { "Content-Type": "application/json" },
     body: JSON.stringify(data),
@@ -43,7 +43,7 @@ export async function registerUser(data) {
 }
 
 export async function loginUser(data) {
-  const res = await fetch("http://localhost:3000/auth/login", {
+  const res = await fetch(`${API_BASE_URL}/auth/login`, {
     method: "POST",
     headers: { "Content-Type": "application/json" },
     body: JSON.stringify(data),

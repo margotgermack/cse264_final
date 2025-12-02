@@ -46,11 +46,11 @@ function HomePage() {
 
   return (
     <Box
-      sx={{
-        width: "100%",
-        maxWidth: 600,
-        mx: "auto",
-      }}
+      // sx={{display: 'flex',
+      // flexDirection: 'column',
+      // alignItems: 'center', // center children horizontally
+      // width: '100%',         // optional, fills Container
+      // gap: 2,}}            // spacing between children}}
     >
       <Typography variant="h4" component="h2" gutterBottom>
         Browse Courses

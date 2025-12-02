@@ -1,7 +1,26 @@
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
-import { registerUser } from "../api.js";
+//import { registerUser } from "../api.js";
 import { useAuth } from "../AuthContext.jsx";
+
+async function registerUser({ name, email, password}) {
+  const res = await fetch("http://localhost:3000/users",{
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify({
+      username: email,   // backend expects 'username'
+      password,          // backend expects 'password'
+      type: "student",   // add a default user type
+    }),
+  })
+  if (!res.ok) {
+    const text = await res.text(); // handle HTML error pages
+    throw new Error(text || "Registration failed");
+  }
+
+  return res.json();
+}
+
 
 function RegisterPage() {
   const [name, setName] = useState("");
