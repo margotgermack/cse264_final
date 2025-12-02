@@ -3,7 +3,7 @@ import { useParams, useNavigate } from "react-router-dom";
 import {
   getCourse,
   getCourseRating,
-  deleteCourse,
+  getCourseComments,
 } from "../api.js";
 
 import { useAuth } from "../AuthContext.jsx";
@@ -26,8 +26,6 @@ function CourseDetailPage() {
 
   const [course, setCourse] = useState(null);
   const [ratings, setRatings] = useState(null);
-
-  const [loadingCourse, setLoadingCourse] = useState(true);
   const [loadingRatings, setLoadingRatings] = useState(true);
   const [error, setError] = useState("");
 
@@ -37,8 +35,16 @@ function CourseDetailPage() {
       try {
         setLoadingCourse(true);
         setError("");
-        const data = await getCourse(id);
-        setCourse(data);
+        const [courseData, ratingsData, commentsData] = await Promise.all([
+          getCourse(id),
+          getCourseRating(id),
+          getCourseComments(id),
+        ]);
+
+        setCourse(courseData);
+        setRatings(ratingsData[0]); 
+        setComments(commentsData);
+
       } catch (err) {
         console.error(err);
         setError("Failed to load course details.");
@@ -64,6 +70,34 @@ function CourseDetailPage() {
     }
     loadRatings();
   }, [id]);
+
+  async function handleAddReview() {
+    try {
+      const [updatedRatings, updatedComments] = await Promise.all([
+        getCourseRating(id),
+        getCourseComments(id),
+      ]);
+      setRatings(updatedRatings[0]);
+      setComments(updatedComments);
+    } catch (err) {
+      console.error(err);
+      alert("Failed to refresh reviews.");
+    }
+  }
+
+  async function handleAddReview() {
+    try {
+      const [updatedRatings, updatedComments] = await Promise.all([
+        getCourseRating(id),
+        getCourseComments(id),
+      ]);
+      setRatings(updatedRatings[0]);
+      setComments(updatedComments);
+    } catch (err) {
+      console.error(err);
+      alert("Failed to refresh reviews.");
+    }
+  }
 
   // After a user submits a review, reload updated rating summary
   async function refreshRatings() {
@@ -110,6 +144,7 @@ function CourseDetailPage() {
         width: "100%",
         maxWidth: 700,
         mx: "auto",
+        mt: '64px',
       }}
     >
       {/* COURSE HEADER */}
@@ -156,7 +191,7 @@ function CourseDetailPage() {
       {loadingRatings ? (
         <CircularProgress />
       ) : (
-        <ReviewList ratings={ratings} />
+        <ReviewList ratings={ratings} comments={comments}/>
       )}
 
       {/* SUBMIT REVIEW (IF LOGGED IN) */}
@@ -169,6 +204,8 @@ function CourseDetailPage() {
               courseId={id}
               ratingId={ratings?.id}
               currentRatings={ratings}
+              currentUser={user.username}
+              onSubmit={handleAddReview}
               onReviewSubmit={refreshRatings}
             />
           )

@@ -1,7 +1,7 @@
 import { useState } from "react";
-import { updateRating } from "../api.js";
+import { updateRating, createComment } from "../api.js";
 
-function ReviewForm({ courseId, ratingId, currentRatings, onSubmit }) {
+function ReviewForm({ courseId, ratingId, currentRatings, onSubmit, currentUser }) {
   const [rating, setRating] = useState(5);
   const [body, setBody] = useState("");
 
@@ -14,9 +14,12 @@ function ReviewForm({ courseId, ratingId, currentRatings, onSubmit }) {
       body,
     };
 
-    
+    const commentData = {
+      created_by: currentUser, // or id
+      body: body,
+    };
 
-    
+  
     const numericRating = Number(rating);
 
     const updatedRatings = {
@@ -30,13 +33,22 @@ function ReviewForm({ courseId, ratingId, currentRatings, onSubmit }) {
     console.log("sending ratings →", updatedRatings);
     console.log("courseid: ", courseId, "ratingid: ", ratingId)
 
-    await updateRating(courseId, ratingId, updatedRatings);
-    if (onSubmit) onSubmit();
 
-    setBody(""); //reset
-    setRating(5);
-
-    alert("Review Submitted!")
+    try {
+      try {
+        await createComment(courseId, commentData); // sends a JSON object
+        setBody(""); // reset
+      } catch (err) {
+        console.error(err);
+        alert("Failed to submit comment");
+      }
+      await updateRating(courseId, ratingId, updatedRatings);
+      alert("Review Submitted!");
+      
+    } catch (err) {
+      console.error(err);
+      alert("Failed to submit review");
+    }
   }
 
   return (
@@ -87,7 +99,7 @@ function ReviewForm({ courseId, ratingId, currentRatings, onSubmit }) {
 
       <br />
 
-      <button type="submit" style={{ marginTop: "0.5rem" }}>
+      <button type="submit" style={{ marginTop: "0.5rem", marginBottom: "5rem"}}>
         Submit Review
       </button>
     </form>

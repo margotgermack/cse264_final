@@ -1,4 +1,4 @@
-function ReviewList({ ratings }) {
+function ReviewList({ ratings, comments }) {
   if (!ratings) {
     return <p>No ratings yet. Be the first to rate this course!</p>;
   }
@@ -22,23 +22,54 @@ function ReviewList({ ratings }) {
           totalVotes
         ).toFixed(2);
 
-  return (
-    <div style={{ marginTop: "1rem" }}>
-      <div
-        style={{
-          border: "1px solid #eee",
-          borderRadius: "6px",
-          padding: "0.75rem",
-          marginBottom: "0.75rem",
-        }}
-      >
-        <p><strong>Average Difficulty:</strong> {average} / 5 ⭐ ({totalVotes} votes)</p>
-
-      </div>
-
-      
+  const ratingsSection = (
+    <div
+      style={{
+        border: "1px solid #eee",
+        borderRadius: "6px",
+        padding: "0.75rem",
+        marginBottom: "0.75rem",
+      }}
+    >
+      <p>
+        <strong>Average Difficulty:</strong> {average} / 5 ⭐ ({totalVotes} votes)
+      </p>
     </div>
   );
+
+// Comments section
+let commentsSection = <p>No comments yet. Be the first to comment!</p>;
+if (comments && comments.length > 0) {
+  commentsSection = comments.map((c) => (
+    <div
+      key={c.id}
+      style={{
+        border: "1px solid #ddd",
+        borderRadius: "6px",
+        padding: "0.5rem",
+        marginBottom: "0.5rem",
+      }}
+    >
+      <p style={{ fontWeight: "bold", marginBottom: "0.25rem" }}>
+        {c.created_by}
+      </p>
+      <p>{c.body}</p>
+    </div>
+  ));
+}
+
+return (
+  <div style={{ marginTop: "1rem" }}>
+    {ratingsSection}
+    <div>
+      <strong>Comments:</strong>
+      {commentsSection}
+    </div>
+  </div>
+);
+
+
+  
 }
 
 export default ReviewList;
