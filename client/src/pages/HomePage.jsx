@@ -1,17 +1,59 @@
 import { useEffect, useState } from "react";
-import { getCourses } from "../api.js";
+import { getCourses, createCourse } from "../api.js";
 import CourseCard from "../components/CourseCard.jsx";
+import { useAuth } from "../AuthContext.jsx";
 
 import Box from "@mui/material/Box";
 import Typography from "@mui/material/Typography";
 import TextField from "@mui/material/TextField";
+import Button from "@mui/material/Button";
 import CircularProgress from "@mui/material/CircularProgress";
 
+
 function HomePage() {
+  const { user } = useAuth();
+  const isAdmin = user?.type === "admin" || user?.role === "admin";
+
   const [courses, setCourses] = useState([]);
   const [search, setSearch] = useState("");
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState("");
+
+  // admin form state
+  const [newCode, setNewCode] = useState("");
+  const [newName, setNewName] = useState("");
+  const [newDescription, setNewDescription] = useState("");
+  const [savingCourse, setSavingCourse] = useState(false);
+  const [saveError, setSaveError] = useState("");
+
+  async function handleCreateCourse(e) {
+    e.preventDefault();
+    if (!newCode || !newName || !newDescription) return;
+
+    try {
+      setSavingCourse(true);
+      setSaveError("");
+      const created = await createCourse({
+        code: newCode,
+        name: newName,
+        description: newDescription,
+      });
+
+      // API returns { message, application: <course> }
+      const course = created.application || created;
+
+      setCourses((prev) => [...prev, course]);
+      setNewCode("");
+      setNewName("");
+      setNewDescription("");
+    } catch (err) {
+      console.error(err);
+      setSaveError("Failed to create course.");
+    } finally {
+      setSavingCourse(false);
+    }
+  }
+
 
   useEffect(() => {
     async function loadCourses() {
@@ -64,6 +106,74 @@ function HomePage() {
         onChange={(e) => setSearch(e.target.value)}
         sx={{ mb: 3 }}
       />
+
+            {/* Admin-only add course form */}
+      {isAdmin && (
+        <Box
+          component="form"
+          onSubmit={handleCreateCourse}
+          sx={{
+            mt: 3,
+            mb: 4,
+            p: 2,
+            borderRadius: 1,
+            border: "1px dashed",
+            borderColor: "divider",
+            display: "flex",
+            flexDirection: "column",
+            gap: 1.5,
+          }}
+        >
+          <Typography variant="subtitle1">Admin: Add a new course</Typography>
+          
+          
+          <Box sx={{ display: "flex", gap: 1 }}>
+            <TextField
+              label="Code"
+              size="small"
+              value={newCode}
+              onChange={(e) => setNewCode(e.target.value)}
+              sx={{ width: "20%" }}
+              required
+            />
+            <TextField
+              label="Name"
+              size="small"
+              value={newName}
+              onChange={(e) => setNewName(e.target.value)}
+              sx={{ flex: 1 }}
+              required
+            />
+          </Box>
+
+          <TextField
+            label="Description"
+            size="small"
+            multiline
+            minRows={2}
+            value={newDescription}
+            onChange={(e) => setNewDescription(e.target.value)}
+            required
+          />
+
+          {saveError && (
+            <Typography variant="body2" color="error">
+              {saveError}
+            </Typography>
+          )}
+
+          <Button
+            type="submit"
+            variant="contained"
+            size="small"
+            disabled={savingCourse}
+            sx={{ alignSelf: "flex-end", textTransform: "none" }}
+          >
+            {savingCourse ? "Saving…" : "Create course"}
+          </Button>
+        </Box>
+      )}
+
 
       {loading && (
         <Box sx={{ display: "flex", justifyContent: "center", mt: 4 }}>

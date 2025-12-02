@@ -10,6 +10,10 @@ import { useAuth } from "../AuthContext.jsx";
 function Navbar() {
   const { user, logout } = useAuth();
 
+  const displayName = user?.username || user?.name || user?.email || "User";
+  const isAdmin = user?.type === "admin" || user?.role === "admin";
+
+
   return (
     <AppBar position="fixed" color="transparent" elevation={0}>
 
@@ -49,6 +53,19 @@ function Navbar() {
             Home
           </Button>
 
+
+        {isAdmin && (
+          <Button
+            component={NavLink}
+            to="/admin/users"
+            color="inherit"
+            sx={{ textTransform: "none" }}
+          >
+            Users
+          </Button>
+        )}
+
+
           {!user && (
             <>
               <Button
@@ -73,10 +90,8 @@ function Navbar() {
           {user && (
             <>
               <Typography variant="body2" sx={{ opacity: 0.8 }}>
-                {user.name}{" "}
-                {user.role === "admin" && (
-                  <span style={{ fontWeight: 600 }}>(admin)</span>
-                )}
+                {displayName}{" "}
+                {isAdmin && <span style={{ fontWeight: 600 }}>(admin)</span>}
               </Typography>
               <Button
                 color="inherit"

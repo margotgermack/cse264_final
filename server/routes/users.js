@@ -5,15 +5,21 @@ import bcrypt from "bcrypt";
 const userRoutes = (app) => {
 
     // GET /users
-    app.get('/users', async(req, res) => {
-        try {
-            const qs = `SELECT * FROM users`
-            query(qs).then(data => res.json(data.rows))
-        } catch (err) {
-            console.error(err)
-            res.status(500).json({ error: err.message })
-        }
-    })
+    app.get("/users", async (req, res) => {
+    try {
+        const qs = `SELECT * FROM users`;
+        const data = await query(qs);
+
+        // remove password_hash before sending to client
+        const safeUsers = data.rows.map(({ password_hash, ...rest }) => rest);
+
+        res.json(safeUsers);
+    } catch (err) {
+        console.error(err);
+        res.status(500).json({ error: err.message });
+    }
+    });
+
 
 
     //POST /users
@@ -104,6 +110,44 @@ const userRoutes = (app) => {
             res.status(500).json({ error: err.message });
         }
     })
+
+    // PUT /users/:user_id  -> update user type (student/admin)
+    app.put("/users/:user_id", async (req, res) => {
+    try {
+        const { user_id } = req.params;
+        const { type } = req.body;
+
+        if (!type || !["student", "admin"].includes(type)) {
+        return res
+            .status(400)
+            .json({ error: "Valid type is required: 'student' or 'admin'." });
+        }
+
+        const qs = `
+        UPDATE users
+        SET type = $2
+        WHERE id = $1
+        RETURNING *;
+        `;
+
+        const result = await query(qs, [user_id, type]);
+
+        if (result.rowCount === 0) {
+        return res.status(404).json({ error: "User not found." });
+        }
+
+        const { password_hash, ...safeUser } = result.rows[0];
+
+        res.json({
+        message: "User type updated successfully.",
+        user: safeUser,
+        });
+    } catch (err) {
+        console.error(err);
+        res.status(500).json({ error: err.message });
+    }
+    });
+
 
     // login route
     app.post('/auth/login', async (req, res) => {

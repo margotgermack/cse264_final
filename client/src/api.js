@@ -60,3 +60,46 @@ export async function updateRating(course_id, rating_id, data) {
   return handleResponse(res)
 }
 
+// --- Course admin functions ---
+
+export async function createCourse(data) {
+  const res = await fetch(`${API_BASE_URL}/courses`, {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify(data),
+  });
+  return handleResponse(res);
+}
+
+export async function deleteCourse(id) {
+  const res = await fetch(`${API_BASE_URL}/courses/${id}`, {
+    method: "DELETE",
+  });
+  return handleResponse(res);
+}
+
+// --- User admin functions ---
+
+export async function getUsers() {
+  const res = await fetch(`${API_BASE_URL}/users`);
+  return handleResponse(res);
+}
+
+export async function deleteUser(userId) {
+  const res = await fetch(`${API_BASE_URL}/users`, {
+    method: "DELETE",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify({ user_id: userId }),
+  });
+  return handleResponse(res);
+}
+
+export async function updateUserType(userId, type) {
+  const res = await fetch(`${API_BASE_URL}/users/${userId}`, {
+    method: "PUT",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify({ type }),
+  });
+  return handleResponse(res);
+}
+
