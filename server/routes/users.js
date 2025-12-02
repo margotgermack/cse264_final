@@ -105,6 +105,31 @@ const userRoutes = (app) => {
         }
     })
 
+    // login route
+    app.post('/auth/login', async (req, res) => {
+        try{
+            const {email, password} = req.body
+            if(!email || !password){
+                return res.status(400).json({ error: "Please enter an email and password"})
+            }
+            const qs = `SELECT * FROM users WHERE username = $1`
+            const result = await query(qs, [email])
+
+            if (result.rowCount === 0) {
+                return res.status(401).json({ error: "Invalid email or password." })
+              }
+          
+              const user = result.rows[0]
+              delete user.password // remove password from response
+          
+              res.json({ user })
+          
+        } catch (err) {
+            console.error(err)
+            res.status(500).json({ error: err.message })
+        }
+    })
+
 
 
 
