@@ -7,6 +7,7 @@ import HomePage from "./pages/HomePage.jsx";
 import CourseDetailPage from "./pages/CourseDetailPage.jsx";
 import LoginPage from "./pages/LoginPage.jsx";
 import RegisterPage from "./pages/RegisterPage.jsx";
+import AdminUsersPage from "./pages/AdminUsersPage.jsx";
 
 // components
 import Navbar from "./components/Navbar.jsx";
@@ -35,6 +36,7 @@ function App() {
           <Route path="/courses/:id" element={<CourseDetailPage />} />
           <Route path="/login" element={<LoginPage />} />
           <Route path="/register" element={<RegisterPage />} />
+          <Route path="/admin/users" element={<AdminUsersPage />} /> 
         </Routes>
       </Box>
     </>

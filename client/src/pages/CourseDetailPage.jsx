@@ -1,11 +1,10 @@
 import { useEffect, useState } from "react";
-import { useParams } from "react-router-dom";
+import { useParams, useNavigate } from "react-router-dom";
 import {
   getCourse,
-  createCourseRating,
   getCourseRating,
+  deleteCourse,
 } from "../api.js";
-
 
 import { useAuth } from "../AuthContext.jsx";
 
@@ -17,21 +16,22 @@ import Button from "@mui/material/Button";
 import ReviewList from "../components/ReviewList.jsx";
 import ReviewForm from "../components/ReviewForm.jsx";
 
-
-
 function CourseDetailPage() {
   const { id } = useParams();
+  const navigate = useNavigate();
   const { user } = useAuth();
 
+  // admin if type === "admin" OR role === "admin"
+  const isAdmin = user?.type === "admin" || user?.role === "admin";
+
   const [course, setCourse] = useState(null);
-  const [reviews, setReviews] = useState([]);
   const [ratings, setRatings] = useState(null);
-  const [loadingRatings, setLoadingRatings] = useState(true);
+
   const [loadingCourse, setLoadingCourse] = useState(true);
-  const [loadingReviews, setLoadingReviews] = useState(true);
+  const [loadingRatings, setLoadingRatings] = useState(true);
   const [error, setError] = useState("");
 
-  // Load course details
+  // Load course information
   useEffect(() => {
     async function loadCourse() {
       try {
@@ -49,12 +49,13 @@ function CourseDetailPage() {
     loadCourse();
   }, [id]);
 
+  // Load course ratings summary
   useEffect(() => {
     async function loadRatings() {
       try {
         setLoadingRatings(true);
         const data = await getCourseRating(id);
-        setRatings(data[0]);
+        setRatings(data?.[0] || null);
       } catch (err) {
         console.error(err);
       } finally {
@@ -64,16 +65,33 @@ function CourseDetailPage() {
     loadRatings();
   }, [id]);
 
-  async function handleAddRating() {
+  // After a user submits a review, reload updated rating summary
+  async function refreshRatings() {
     try {
       const updated = await getCourseRating(id);
-      setRatings(updated);
+      setRatings(updated?.[0] || null);
     } catch (err) {
       console.error(err);
-      alert("Failed to submit rating.");
     }
   }
 
+  // Admin-only delete course
+  async function handleDeleteCourse() {
+    const confirmed = window.confirm(
+      "Are you sure you want to delete this course permanently?"
+    );
+    if (!confirmed) return;
+
+    try {
+      await deleteCourse(id);
+      navigate("/"); // send back to home page
+    } catch (err) {
+      console.error(err);
+      alert("Failed to delete the course.");
+    }
+  }
+
+  // 🌟 LOADING STATE
   if (loadingCourse) {
     return (
       <Box sx={{ display: "flex", justifyContent: "center", mt: 4 }}>
@@ -94,6 +112,7 @@ function CourseDetailPage() {
         mx: "auto",
       }}
     >
+      {/* COURSE HEADER */}
       <Typography variant="h4" gutterBottom>
         {course.code}: {course.name}
       </Typography>
@@ -102,8 +121,8 @@ function CourseDetailPage() {
         <Typography sx={{ mb: 3 }}>{course.description}</Typography>
       )}
 
-      {/* Admin-only area */}
-      {user?.role === "admin" && (
+      {/* ADMIN PANEL */}
+      {isAdmin && (
         <Box
           sx={{
             mb: 3,
@@ -114,19 +133,22 @@ function CourseDetailPage() {
           }}
         >
           <Typography variant="subtitle2" sx={{ mb: 1 }}>
-            Admin tools
+            Admin Tools
           </Typography>
+
           <Button
             variant="outlined"
+            color="error"
             size="small"
-            disabled
+            onClick={handleDeleteCourse}
             sx={{ textTransform: "none" }}
           >
-            Edit course (coming soon)
+            Delete Course
           </Button>
         </Box>
       )}
 
+      {/* REVIEWS SECTION */}
       <Typography variant="h5" gutterBottom>
         Reviews
       </Typography>
@@ -137,19 +159,19 @@ function CourseDetailPage() {
         <ReviewList ratings={ratings} />
       )}
 
+      {/* SUBMIT REVIEW (IF LOGGED IN) */}
       <Box sx={{ mt: 3 }}>
         {user ? (
-          <>
-            {loadingRatings ? (
-              <CircularProgress />
-                ) : (
-                  <ReviewForm
-                    courseId={id}
-                    ratingId={ratings?.id}    // now correct
-                    currentRatings={ratings}
-                  />
-                )}
-          </>
+          loadingRatings ? (
+            <CircularProgress />
+          ) : (
+            <ReviewForm
+              courseId={id}
+              ratingId={ratings?.id}
+              currentRatings={ratings}
+              onReviewSubmit={refreshRatings}
+            />
+          )
         ) : (
           <Typography variant="body2" sx={{ opacity: 0.8 }}>
             You must be logged in to leave a review.
