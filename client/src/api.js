@@ -128,3 +128,17 @@ export async function getCourseComments(course_id) {
   return handleResponse(res);
 }
 
+
+export async function updateLikes(course_id, like_id, data) {
+  const res = await fetch (`${API_BASE_URL}/courses/${course_id}/likes/${like_id}`, {
+    method: "PUT",
+    headers: {"Content-Type": "application/json"},
+    body: JSON.stringify(data)
+  });
+  return handleResponse(res)
+}
+
+export async function getCourseLike(id) {
+  const res = await fetch(`${API_BASE_URL}/courses/${id}/likes`);
+  return handleResponse(res);
+}

@@ -22,8 +22,7 @@ const ratingRoutes = (app) => {
             const { course_id } = req.params
             const { one_star, two_stars, three_stars, four_stars, five_stars } = req.body;
 
-
-            if (one_star === undefined || two_stars === undefined || three_stars === undefined || four_stars === undefined || five_stars === undefined) {
+            if (!one_star || !two_stars || !three_stars || !four_stars || !five_stars) {
                 return res.status(400).json({ 
                     error: "one_star, two_stars, three_stars, four_stars, and five_stars are required." 
                 });
@@ -55,10 +54,16 @@ const ratingRoutes = (app) => {
             const { course_id, rating_id } = req.params
             const { one_star, two_stars, three_stars, four_stars, five_stars } = req.body;
 
-            if (one_star === undefined || two_stars === undefined || three_stars === undefined || four_stars === undefined || five_stars === undefined) {
-                return res.status(400).json({ 
-                    error: "one_star, two_stars, three_stars, four_stars, and five_stars are required." 
-                });
+            if (
+                one_star === undefined || one_star === null ||
+                two_stars === undefined || two_stars === null ||
+                three_stars === undefined || three_stars === null ||
+                four_stars === undefined || four_stars === null ||
+                five_stars === undefined || five_stars === null
+            ) {
+            return res.status(400).json({ 
+                error: "one_star, two_stars, three_stars, four_stars, and five_stars are required." 
+            });
             }
 
             const qs = `
