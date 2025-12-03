@@ -97,7 +97,7 @@ function CourseDetailPage() {
 
   async function handleAddReview() {
     try {
-      const [updatedRatings, updatedComments] = await Promise.all([
+      const [updatedRatings, updatedLikes, updatedComments] = await Promise.all([
         getCourseRating(id),
         getCourseLike(id),
         getCourseComments(id),

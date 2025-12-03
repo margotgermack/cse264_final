@@ -62,7 +62,7 @@ function ReviewForm({ courseId, ratingId, currentRatings, onSubmit, currentUser,
       alert("Failed to submit review");
     }
 
-    if (onsubmit) onSubmit();
+    if (onSubmit) onSubmit();
     setLike(0);
     setRating(5)
   }
@@ -99,7 +99,7 @@ function ReviewForm({ courseId, ratingId, currentRatings, onSubmit, currentUser,
             style={{
               padding: "0.5rem 1rem",
               borderRadius: "6px",
-              background: like === 1 ? "#b1f1c0ff" : "#b5b5b5ff",
+              background: like === 1 ? "#9cf4a0ff" : "#000000ff",
               border: "1px solid #ccc",
               cursor: "pointer",
               fontSize: "1.2rem",
@@ -115,7 +115,7 @@ function ReviewForm({ courseId, ratingId, currentRatings, onSubmit, currentUser,
             style={{
               padding: "0.5rem 1rem",
               borderRadius: "6px",
-              background: like === 0 ? "#f8b6bcff" : "#b5b5b5ff",
+              background: like === 0 ? "#ff7a85ff" : "#000000ff",
               border: "1px solid #ccc",
               cursor: "pointer",
               fontSize: "1.2rem",
