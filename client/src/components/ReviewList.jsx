@@ -1,6 +1,6 @@
-function ReviewList({ ratings, comments }) {
-  if (!ratings) {
-    return <p>No ratings yet. Be the first to rate this course!</p>;
+function ReviewList({ ratings, likes, comments }) {
+  if (!ratings || !likes || !comments) {
+    return <p>Loading…</p>;
   }
 
   const totalVotes =
@@ -22,6 +22,9 @@ function ReviewList({ ratings, comments }) {
           totalVotes
         ).toFixed(2);
 
+  const totalLikes = Number(likes.likes);
+  const totalDislikes = Number(likes.dislikes);
+
   const ratingsSection = (
     <div
       style={{
@@ -33,6 +36,7 @@ function ReviewList({ ratings, comments }) {
     >
       <p>
         <strong>Average Difficulty:</strong> {average} / 5 ⭐ ({totalVotes} votes)
+        <p><strong>{totalLikes} Likes {totalDislikes} Dislikes</strong></p>
       </p>
     </div>
   );

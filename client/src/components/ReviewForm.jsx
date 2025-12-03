@@ -1,9 +1,10 @@
 import { useState } from "react";
-import { updateRating, createComment } from "../api.js";
+import { updateRating, updateLikes, createComment } from "../api.js";
 
-function ReviewForm({ courseId, ratingId, currentRatings, onSubmit, currentUser }) {
+function ReviewForm({ courseId, ratingId, currentRatings, onSubmit, currentUser, likeId, currentLikes }) {
   const [rating, setRating] = useState(5);
   const [body, setBody] = useState("");
+  const [like, setLike] = useState(0);
 
   async function handleSubmit(e) {
     e.preventDefault();
@@ -19,7 +20,8 @@ function ReviewForm({ courseId, ratingId, currentRatings, onSubmit, currentUser 
       body: body,
     };
 
-  
+    console.log("currentRatings:", currentRatings);
+    console.log("currentLikes:", currentLikes);
     const numericRating = Number(rating);
 
     const updatedRatings = {
@@ -34,6 +36,15 @@ function ReviewForm({ courseId, ratingId, currentRatings, onSubmit, currentUser 
     console.log("courseid: ", courseId, "ratingid: ", ratingId)
 
 
+    // Update like/dislike count
+    const updatedLikes = {
+      likes: Number(currentLikes.likes) + (like === 1 ? 1 : 0),
+      dislikes: Number(currentLikes.dislikes) + (like === 0 ? 1 : 0),
+    };
+
+    console.log("sending likes →", updatedLikes);
+
+
     try {
       try {
         await createComment(courseId, commentData); // sends a JSON object
@@ -43,12 +54,17 @@ function ReviewForm({ courseId, ratingId, currentRatings, onSubmit, currentUser 
         alert("Failed to submit comment");
       }
       await updateRating(courseId, ratingId, updatedRatings);
+      await updateLikes(courseId, likeId, updatedLikes)
       alert("Review Submitted!");
       
     } catch (err) {
       console.error(err);
       alert("Failed to submit review");
     }
+
+    if (onSubmit) onSubmit();
+    setLike(0);
+    setRating(5)
   }
 
   return (
@@ -75,14 +91,38 @@ function ReviewForm({ courseId, ratingId, currentRatings, onSubmit, currentUser 
       </label>
 
       <br />
-        <label>
-          like/dislike
-          <input 
-          type="checkbox"
-          min="1"
-          max="2"
-          />
-        </label>
+        
+         {/* Thumbs up */}
+          <button
+            type="button"
+            onClick={() => setLike(1)}
+            style={{
+              padding: "0.5rem 1rem",
+              borderRadius: "6px",
+              background: like === 1 ? "#9cf4a0ff" : "#000000ff",
+              border: "1px solid #ccc",
+              cursor: "pointer",
+              fontSize: "1.2rem",
+            }}
+          >
+            👍
+          </button>
+
+          {/* Thumbs down */}
+          <button
+            type="button"
+            onClick={() => setLike(0)}
+            style={{
+              padding: "0.5rem 1rem",
+              borderRadius: "6px",
+              background: like === 0 ? "#ff7a85ff" : "#000000ff",
+              border: "1px solid #ccc",
+              cursor: "pointer",
+              fontSize: "1.2rem",
+            }}
+          >
+            👎
+          </button>
       <br />
 
       <label>
