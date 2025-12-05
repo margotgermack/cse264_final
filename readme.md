@@ -2,8 +2,66 @@
 ## Due: Friday, May 2, 2025 at 11:59 PM
 ## Add your full name and Lehigh email address to this README!
 
+**Project Overview (Name, description, purpose):**
 
-This repo contains the boilerplate code for a full stack application using Express and React.  If you need a database table, please let your instructor know.
+MountainCourse is a web platform for Lehigh students to discover, rate, and review courses. This web app will help students make informed academic decisions based on real student feedback. The platform allows users to register, browse courses, submit reviews, rate difficulty, and like or dislike course pages and comments. Admins will have the ability to moderate and manipulate content as necessary.
+
+**Team Members & Roles**
+
+Audrey: Frontend Lead  
+* Build UI, create page layouts, routing, interactive components
+* Handle client-side logic and API calls
+
+Sierra: Backend Lead
+* Build internal REST API, secure endpoints
+* Implement database models and queries
+
+Margot: Full-Stack
+* Database design, deployment setup, testing
+* Assist with both frontend and backend tasks
+
+
+**Application Features (How it meets each requirement)**
+
+User Accounts & Roles
+* Students create accounts to post and interact
+* Admin users can remove users or courses
+
+Database
+* Stores users, courses, likes, ratings, and votes,
+* Uses PostgreSQL with Supabase
+
+Interactive UI
+* Search bar, department filter
+* Like/dislike updates on webpage
+* Review submission form
+
+New Library / Framework
+* Material UI
+
+Internal REST API
+* Custom Express API for course data, reviews, votes
+
+
+**Installation & Setup Instructions (How to install, run, and configure the application)**
+
+1. Clone repository
+2. Create .env file with proper credentials
+3. Change directory to server and run `npm install`
+4. Run `npm run dev`
+5. Change directory to client and run `npm install`
+6. Run `npm run dev`
+7. Click link for client web app printed in console
+
+**API Keys & Database Setup (What environment variables or external configurations are needed)**
+
+The only configurations needed are credentials to put into the .env file, including:  
+OSTGRES_HOST=aws-1-ca-central-1.pooler.supabase.com  
+POSTGRES_PORT=5432  
+POSTGRES_DBNAME=postgres  
+POSTGRES_USERNAME=postgres.ppyziifoxqltzbylpwxn  
+POSTGRES_PASSWORD=(password)
+
 
 ### Project Requirements
 Your web application should have/do the following:
