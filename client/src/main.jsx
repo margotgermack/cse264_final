@@ -12,7 +12,7 @@ import App from "./App.jsx";
 
 const theme = createTheme({
   palette: {
-    mode: "dark",          // 🔥 tell MUI we're in dark mode
+    mode: "dark",  // tell MUI we're in dark mode
     primary: {
       main: "#1976d2",
     },

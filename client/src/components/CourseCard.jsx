@@ -1,3 +1,8 @@
+/*
+Displays individual course in the list on the homepage
+Clicking view details navigates to that course's detail page
+- reuseable UI component
+*/
 import { Link } from "react-router-dom";
 
 import Card from "@mui/material/Card";

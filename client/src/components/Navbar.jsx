@@ -1,3 +1,7 @@
+/*
+Appears on every page
+Consumes AuthContext to conditionally render UI based on login status
+*/
 import { Link, NavLink } from "react-router-dom";
 import AppBar from "@mui/material/AppBar";
 import Toolbar from "@mui/material/Toolbar";
@@ -11,6 +15,8 @@ function Navbar() {
   const { user, logout } = useAuth();
 
   const displayName = user?.username || user?.name || user?.email || "User";
+
+  // detect if admin account
   const isAdmin = user?.type === "admin" || user?.role === "admin";
 
 

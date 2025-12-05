@@ -3,6 +3,8 @@ import { useNavigate } from "react-router-dom";
 //import { registerUser } from "../api.js";
 import { useAuth } from "../AuthContext.jsx";
 
+// helper function for sending registration data to api 
+// manually send username, passowrd and type
 async function registerUser({ name, email, password}) {
   const res = await fetch("http://localhost:3000/users",{
     method: "POST",
@@ -10,9 +12,10 @@ async function registerUser({ name, email, password}) {
     body: JSON.stringify({
       username: email,   // backend expects 'username'
       password,          // backend expects 'password'
-      type: "student",   // add a default user type
+      type: "student",   // default user type
     }),
   })
+  // handle invalid response
   if (!res.ok) {
     const text = await res.text(); // handle HTML error pages
     throw new Error(text || "Registration failed");
@@ -23,19 +26,23 @@ async function registerUser({ name, email, password}) {
 
 
 function RegisterPage() {
+  // local state to hold form inputs
   const [name, setName] = useState("");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [error, setError] = useState("");
+  // access global login() function so new users auto-login
   const { login } = useAuth();
   const navigate = useNavigate();
 
+  // new user registration
   async function handleSubmit(e) {
     e.preventDefault();
     setError("");
 
     try {
       const { user } = await registerUser({ name, email, password });
+      // store user in authcontext + localStorage
       login(user); // auto-log in after sign-up
       navigate("/");
     } catch (err) {

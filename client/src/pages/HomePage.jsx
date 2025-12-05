@@ -1,3 +1,10 @@
+/*
+Course browsing and live filtering
+- fetch all courses from backend API when page loads
+- allow searching 
+- render filtered course list
+- show loading/error states
+*/
 import { useEffect, useState } from "react";
 import { getCourses, createCourse } from "../api.js";
 import CourseCard from "../components/CourseCard.jsx";
@@ -14,8 +21,11 @@ function HomePage() {
   const { user } = useAuth();
   const isAdmin = user?.type === "admin" || user?.role === "admin";
 
+  // stores courses retrieved from backend
   const [courses, setCourses] = useState([]);
+  // text entered into the search bar
   const [search, setSearch] = useState("");
+  // UI states for user feedback
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState("");
 
@@ -54,7 +64,8 @@ function HomePage() {
     }
   }
 
-
+  // load courses when component mounts
+  // useEffect runs after the first render
   useEffect(() => {
     async function loadCourses() {
       try {
@@ -73,6 +84,7 @@ function HomePage() {
     loadCourses();
   }, []);
 
+  // live filtering -- frontend search 
   const filteredCourses = courses.filter((course) => {
     const term = search.toLowerCase();
     const name = (course.name || "").toLowerCase();
