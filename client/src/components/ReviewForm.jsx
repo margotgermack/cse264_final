@@ -1,13 +1,20 @@
+/*
+Allows authenticated users to submit: dificulty rating, like/dislike, written comment
+- Tallies existing and new props
+- Resets after submission
+*/
 import { useState } from "react";
 import { updateRating, updateLikes, createComment } from "../api.js";
 
 function ReviewForm({ courseId, ratingId, currentRatings, onSubmit, currentUser, likeId, currentLikes }) {
+  // local component state with defaults
   const [rating, setRating] = useState(5);
   const [body, setBody] = useState("");
   const [like, setLike] = useState(0);
 
   async function handleSubmit(e) {
     e.preventDefault();
+    // prevent blank submission
     if (!body.trim()) return;
 
     const reviewData = {
@@ -22,6 +29,8 @@ function ReviewForm({ courseId, ratingId, currentRatings, onSubmit, currentUser,
 
     console.log("currentRatings:", currentRatings);
     console.log("currentLikes:", currentLikes);
+
+    // build updated rating counts by incrementing by selected category
     const numericRating = Number(rating);
 
     const updatedRatings = {
@@ -46,6 +55,7 @@ function ReviewForm({ courseId, ratingId, currentRatings, onSubmit, currentUser,
 
 
     try {
+      // 1. Create the comment record in DB
       try {
         await createComment(courseId, commentData); // sends a JSON object
         setBody(""); // reset
@@ -53,7 +63,9 @@ function ReviewForm({ courseId, ratingId, currentRatings, onSubmit, currentUser,
         console.error(err);
         alert("Failed to submit comment");
       }
+      // 2. Updtae ratings tally in DB
       await updateRating(courseId, ratingId, updatedRatings);
+      // 3. Update like/dislike tally
       await updateLikes(courseId, likeId, updatedLikes)
       alert("Review Submitted!");
       
@@ -61,8 +73,10 @@ function ReviewForm({ courseId, ratingId, currentRatings, onSubmit, currentUser,
       console.error(err);
       alert("Failed to submit review");
     }
-
+    // let parent component refresh view
     if (onSubmit) onSubmit();
+
+    // reset UI state
     setLike(0);
     setRating(5)
   }

@@ -4,19 +4,26 @@ import { loginUser } from "../api.js";
 import { useAuth } from "../AuthContext.jsx";
 
 function LoginPage() {
+  // local component state manages from fields
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [error, setError] = useState("");
+  // global auth context gives login() to update the logged in user
   const { login } = useAuth();
+  // used to redirect the user after successfull login
   const navigate = useNavigate();
 
+  // handles form submission
   async function handleSubmit(e) {
     e.preventDefault();
     setError("");
 
     try {
+      // sends login request to the backend
       const { user } = await loginUser({ email, password });
+      // save logged in user into shared auth context
       login(user);
+      // navigate to homepage
       navigate("/");
     } catch (err) {
       console.error(err);

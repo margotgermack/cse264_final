@@ -1,8 +1,15 @@
+/*
+Displays calculated averages, like/dislike counts and all comments
+- ratings tab;e, likes table, user comments
+*/
+
 function ReviewList({ ratings, likes, comments }) {
+  // if missing data, show placeholder text
   if (!ratings || !likes || !comments) {
     return <p>No reviews yet. Be the first to write a review!</p>;
   }
 
+  // sum total number of votes across star categories
   const totalVotes =
   Number(ratings.one_star) +
   Number(ratings.two_stars) +
@@ -10,6 +17,7 @@ function ReviewList({ ratings, likes, comments }) {
   Number(ratings.four_stars) +
   Number(ratings.five_stars);
 
+  // compute weighted average difficulty score
   const average =
     totalVotes === 0
       ? 0
@@ -22,9 +30,11 @@ function ReviewList({ ratings, likes, comments }) {
           totalVotes
         ).toFixed(2);
 
+  // sumerize likes/dislikes
   const totalLikes = Number(likes.likes);
   const totalDislikes = Number(likes.dislikes);
 
+  // ratings summary UI
   const ratingsSection = (
     <div
       style={{
@@ -41,7 +51,7 @@ function ReviewList({ ratings, likes, comments }) {
     </div>
   );
 
-// Comments section
+// Render all comments or fallback
 let commentsSection = <p>No comments yet. Be the first to comment!</p>;
 if (comments && comments.length > 0) {
   commentsSection = comments.map((c) => (

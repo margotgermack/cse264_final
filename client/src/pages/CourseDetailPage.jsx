@@ -1,3 +1,4 @@
+
 import { useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
 import {
@@ -22,9 +23,12 @@ import ReviewForm from "../components/ReviewForm.jsx";
 
 
 function CourseDetailPage() {
+  // get course id from URL
   const { id } = useParams();
+  // global auth info: determines if admin/user logged in
   const { user } = useAuth();
 
+  // local components state
   const [course, setCourse] = useState(null);
   const [reviews, setReviews] = useState([]);
   const [ratings, setRatings] = useState(null);
@@ -65,6 +69,7 @@ function CourseDetailPage() {
   }, [id]);
   
 
+  // load ratings when course changes
   useEffect(() => {
     async function loadRatings() {
       try {

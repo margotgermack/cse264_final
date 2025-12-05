@@ -21,10 +21,13 @@ function AdminUsersPage() {
 
   const isAdmin = user?.type === "admin" || user?.role === "admin";
 
+  // local state soring user list
   const [users, setUsers] = useState([]);
+  // UI behavior flags
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState("");
 
+  // load all users on component mount
   useEffect(() => {
     // if you're not an admin, send away
     if (!isAdmin) {
@@ -49,6 +52,7 @@ function AdminUsersPage() {
     loadUsers();
   }, [isAdmin, navigate]);
 
+  // delete user handler
   async function handleDelete(id) {
     const confirmed = window.confirm(
       "Are you sure you want to delete this user?"
@@ -64,6 +68,7 @@ function AdminUsersPage() {
     }
   }
 
+  // role update handler
   async function handleChangeType(id, newType) {
     try {
       const res = await updateUserType(id, newType);
@@ -78,6 +83,7 @@ function AdminUsersPage() {
     }
   }
 
+  // prevent non admin access
   if (!isAdmin) {
     return null; // brief flash before redirect
   }
