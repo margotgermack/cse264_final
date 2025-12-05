@@ -56,7 +56,7 @@ Internal REST API
 **API Keys & Database Setup (What environment variables or external configurations are needed)**
 
 The only configurations needed are credentials to put into the .env file, including:  
-OSTGRES_HOST=aws-1-ca-central-1.pooler.supabase.com  
+POSTGRES_HOST=aws-1-ca-central-1.pooler.supabase.com  
 POSTGRES_PORT=5432  
 POSTGRES_DBNAME=postgres  
 POSTGRES_USERNAME=postgres.ppyziifoxqltzbylpwxn  
@@ -113,22 +113,17 @@ POST /users
 GET /users  
 DELETE /users  *
 
-POST /courses  
-GET /courses  
+POST /courses *  
+GET /courses 
 GET /courses/:id  
-PUT /courses/:id  *
 DELETE /courses/:id  *
 
 POST /courses/:id/comments  
-GET /courses/:id/comments  
-PUT /courses/:id/comments/:comment_id  
-DELETE /courses/:id/comments/:comment_id  
+GET /courses/:id/comments   
 
 POST /courses/:id/likes  
-PUT /courses/:id/likes  
 > thought is to check for existance of course in database, if not present, use post to create new entry to track likes. If present, use put to alter entry for corresponding course's likes
 GET /courses/:id/likes  
-DELETE /courses/:id/likes  *
 
 POST /courses/:id/ratings
 PUT /courses/:id/ratings
