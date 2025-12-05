@@ -1,6 +1,6 @@
 function ReviewList({ ratings, likes, comments }) {
   if (!ratings || !likes || !comments) {
-    return <p>Loading…</p>;
+    return <p>No reviews yet. Be the first to write a review!</p>;
   }
 
   const totalVotes =

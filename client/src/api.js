@@ -87,10 +87,9 @@ export async function getUsers() {
 }
 
 export async function deleteUser(userId) {
-  const res = await fetch(`${API_BASE_URL}/users`, {
+  const res = await fetch(`${API_BASE_URL}/users/${userId}`, {
     method: "DELETE",
     headers: { "Content-Type": "application/json" },
-    body: JSON.stringify({ user_id: userId }),
   });
   return handleResponse(res);
 }
